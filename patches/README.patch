@@ -1,0 +1,37 @@
+diff --git a/README.md b/README.md
+index 1d6d329f6..16791a44e 100644
+--- a/README.md
++++ b/README.md
+@@ -70,3 +70,32 @@ docker load < glimpse_v1.1.1-c27e90d_20210521.tar.gz
+ docker run -it glimpse:v1.1.1-c27e90d_20210521
+ ```
+ To run the tools you can use 'GLIMPSE_[tool name]_v1.1.1' (e.g. GLIMPSE_phase_v1.1.1) inside the docker run (-it) session 
++
++### Build Notes (Vendored + SIMDe)
++
++This repository includes local (vendored) copies of:
++
++- `boost_1_78_0`
++- `htslib-1.16`
++- `phase/src/simde`
++
++The current build setup was updated with the following goals:
++
++- remove hard dependency on Intel-only AVX2/FMA compilation flags in `phase`
++- enable SIMD portability through SIMDe headers in `phase/src/models`
++- make default builds resolve Boost/HTSlib from vendored paths
++- align Docker build behavior with local `make -f makefile`
++
++Practical implications:
++
++- `phase` now includes SIMDe headers (`simde/x86/avx2.h`, `simde/x86/fma.h`) with native aliases enabled.
++- Top-level `make -f makefile` bootstraps required vendored dependency artifacts when missing:
++  - Boost staged static libraries (`boost_1_78_0/stage/lib/libboost_{iostreams,program_options,serialization}.a`)
++  - HTSlib static library (`htslib-1.16/libhts.a`)
++- Top-level build now also copies final executables into the repository-level `bin/` folder.
++- Dockerfile uses vendored sources from the repository and invokes the root makefile (`make -f makefile`).
++
++Notes:
++
++- This change improves portability (including non-x86 targets) for `phase` SIMD code paths by relying on SIMDe compatibility layers.
++- Link-time dependencies such as `curl`, `crypto`, `deflate`, `z`, `bz2`, and `lzma` are still required by project link flags / HTSlib linkage.

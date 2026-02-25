@@ -11,6 +11,12 @@
 [![Docker hub](https://img.shields.io/docker/pulls/simrub/glimpse)](https://hub.docker.com/r/simrub/glimpse/)
 [![GitHub Releases](https://img.shields.io/github/v/release/odelaneau/GLIMPSE)](https://github.com/odelaneau/GLIMPSE/releases)
 
+### Object of the patches to the upstream repo
+
+This repository includes local (vendored) copies of `boost_1_78_0`, `htslib-1.16` and  `phase/src/simde` with the following goals of removing hard dependency on Intel-only AVX2/FMA compilation flags in `phase`, enabling SIMD portability through SIMDe headers in `phase/src/models`.
+
+This change improves portability (including non-x86 targets) for `phase` SIMD code paths by relying on SIMDe compatibility layers. Link-time dependencies such as `curl`, `crypto`, `deflate`, `z`, `bz2`, and `lzma` are still required by project link flags / HTSlib linkage.
+
 
 ### Versions
 
@@ -43,7 +49,13 @@ At the moment, GLIMPSE2 performs imputation only from a reference panel of sampl
 
 ### Installation
 
-To build the source code, please refer to the [step-by-step guide on the website](https://odelaneau.github.io/GLIMPSE/docs/installation).
+To build the source code, please refer to the [step-by-step guide on the website](https://odelaneau.github.io/GLIMPSE/docs/installation) for the upstream version or
+
+```bash
+make -f makefile
+```
+
+this build binaries and copy them in .bin
 
 #### Docker images
 
@@ -70,3 +82,4 @@ docker load < glimpse_v1.1.1-c27e90d_20210521.tar.gz
 docker run -it glimpse:v1.1.1-c27e90d_20210521
 ```
 To run the tools you can use 'GLIMPSE_[tool name]_v1.1.1' (e.g. GLIMPSE_phase_v1.1.1) inside the docker run (-it) session 
+
