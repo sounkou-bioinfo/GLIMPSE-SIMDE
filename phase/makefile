@@ -1,7 +1,7 @@
 #COMPILER MODE C++11
 CXXSTD?=c++17
 CXX?=g++
-CXX:=$(CXX) -std=$(CXXSTD)
+CXXSTD_FLAG?=-std=$(CXXSTD)
 
 
 #create folders
@@ -10,6 +10,7 @@ dummy_build_folder_obj := $(shell mkdir -p obj)
 
 #COMPILER & LINKER FLAGS
 CXXFLAG=-O3 -Wno-ignored-attributes
+CXXFLAG+=$(EXTRA_CXXFLAG)
 LDFLAG=-O3
 
 #CXXFLAG=-O0 -g -Wno-ignored-attributes
@@ -172,13 +173,13 @@ static_exe: $(EXEFILE)
 all: selfcontained
 	
 $(BFILE): $(OFILE)
-	$(CXX) $(LDFLAG) $^ $(HTSLIB_LIB) $(BOOST_LIB_IO) $(BOOST_LIB_PO) $(BOOST_LIB_SE) $(BGEN_LIB) -o $@ $(DYN_LIBS)
+	$(CXX) $(CXXSTD_FLAG) $(LDFLAG) $^ $(HTSLIB_LIB) $(BOOST_LIB_IO) $(BOOST_LIB_PO) $(BOOST_LIB_SE) $(BGEN_LIB) -o $@ $(DYN_LIBS)
 
 $(EXEFILE): $(OFILE)
-	$(CXX) $(LDFLAG) -static -static-libgcc -static-libstdc++ -pthread -o $(EXEFILE) $^ $(HTSLIB_LIB) $(BOOST_LIB_IO) $(BOOST_LIB_PO) $(BOOST_LIB_SE) -Wl,-Bstatic $(DYN_LIBS)
+	$(CXX) $(CXXSTD_FLAG) $(LDFLAG) -static -static-libgcc -static-libstdc++ -pthread -o $(EXEFILE) $^ $(HTSLIB_LIB) $(BOOST_LIB_IO) $(BOOST_LIB_PO) $(BOOST_LIB_SE) -Wl,-Bstatic $(DYN_LIBS)
 
 obj/%.o: %.cpp $(HFILE)
-	$(CXX) $(CXXFLAG) -c $< -o $@ -Isrc -I$(SIMDE_INC) -I$(HTSLIB_INC) -I$(BOOST_INC)
+	$(CXX) $(CXXSTD_FLAG) $(CXXFLAG) -c $< -o $@ -Isrc -I$(SIMDE_INC) -I$(HTSLIB_INC) -I$(BOOST_INC)
 
 clean: 
 	rm -f obj/*.o $(BFILE)

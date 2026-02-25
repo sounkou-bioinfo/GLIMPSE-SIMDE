@@ -58,7 +58,7 @@ jobs:
       - name: Build (macOS)
         if: runner.os == 'macOS'
         run: |
-          make -f makefile CXX='clang++ -Wno-deprecated-builtins -Wno-error=deprecated-builtins'
+          make -f makefile CXX='clang++' CXXSTD='c++17' EXTRA_CXXFLAG='-Wno-deprecated-builtins -Wno-error=deprecated-builtins -Wno-deprecated-declarations'
 
       - name: Upload binaries
         uses: actions/upload-artifact@v4
