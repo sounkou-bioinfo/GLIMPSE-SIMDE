@@ -1,0 +1,3 @@
+[submodule "phase/src/simde"]
+	path = phase/src/simde
+	url = https://github.com/simd-everywhere/simde.git
