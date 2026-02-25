@@ -23,7 +23,15 @@ VPATH=$(shell for file in `find src -name *.cpp`; do echo $$(dirname $$file); do
 
 NAME=$(shell basename $(CURDIR))
 BFILE=bin/GLIMPSE2_$(NAME)
-EXEFILE=bin/GLIMPSE2_$(NAME)_static
+EXEFILE=bin/GLIMPSE2_0 0NAME)_static
+
+HTSSRC?=..
+HTSLIB_INC?=$(HTSSRC)/htslib-1.16
+HTSLIB_LIB?=$(HTSSRC)/htslib-1.16/libhts.a
+BOOST_INC?=../boost_1_78_0
+BOOST_LIB_IO?=../boost_1_78_0/stage/lib/libboost_iostreams.a
+BOOST_LIB_PO?=../boost_1_78_0/stage/lib/libboost_program_options.a
+BOOST_LIB_SE?=../boost_1_78_0/stage/lib/libboost_serialization.a
 
 #COMMIT_VERS=$(shell git rev-parse --short HEAD)
 #COMMIT_DATE=$(shell git log -1 --format=%cd --date=short)
@@ -88,6 +96,17 @@ ifeq ($(BGEN_SUPPORT),YES)
 endif
 
 #CONDITIONAL PATH DEFINITON
+selfcontained: HTSSRC=..
+selfcontained: HTSLIB_INC=$(HTSSRC)/htslib-1.16
+selfcontained: HTSLIB_LIB=$(HTSSRC)/htslib-1.16/libhts.a
+selfcontained: BOOST_INC=../boost_1_78_0
+selfcontained: BOOST_LIB_IO=../boost_1_78_0/stage/lib/libboost_iostreams.a
+selfcontained: BOOST_LIB_PO=../boost_1_78_0/stage/lib/libboost_program_options.a
+selfcontained: BOOST_LIB_SE=../boost_1_78_0/stage/lib/libboost_serialization.a
+selfcontained: $(BFILE)
+
+local: selfcontained
+
 
 system: DYN_LIBS=-lz -lpthread -lbz2 -llzma
 system: HTSSRC=/home/srubinac/git
@@ -147,7 +166,7 @@ static_exe: BOOST_LIB_SE=/usr/local/lib/libboost_serialization.a
 static_exe: $(EXEFILE)
 
 #COMPILATION RULES
-all: desktop
+all: selfcontained
 	
 $(BFILE): $(OFILE)
 	$(CXX) $(LDFLAG) $^ $(HTSLIB_LIB) $(BOOST_LIB_IO) $(BOOST_LIB_PO) $(BOOST_LIB_SE) $(BGEN_LIB) -o $@ $(DYN_LIBS)
