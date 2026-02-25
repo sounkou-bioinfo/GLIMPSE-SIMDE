@@ -13,9 +13,9 @@
 
 ### Object of the patches to the upstream repo
 
-This repository includes local (vendored) copies of `boost_1_78_0`, `htslib-1.16` and  `phase/src/simde` with the following goals of removing hard dependency on Intel-only AVX2/FMA compilation flags in `phase`, enabling SIMD portability through SIMDe headers in `phase/src/models`.
+This repository includes local (vendored) copies of `boost_1_78_0`, `htslib-1.16` and  [`simde`](https://github.com/simd-everywhere/simde/tree/master) with the following goals of removing hard dependency on Intel-only AVX2/FMA compilation flags in `phase`, enabling SIMD portability through SIMDe headers in `phase/src/models`.
 
-This change improves portability (including non-x86 targets) for `phase` SIMD code paths by relying on SIMDe compatibility layers. Link-time dependencies such as `curl`, `crypto`, `deflate`, `z`, `bz2`, and `lzma` are still required by project link flags / HTSlib linkage.
+This change improves portability (including non-x86 targets) for `phase` SIMD code paths by relying on SIMDe compatibility layers. Link-time dependencies such as `curl`, `crypto`, `deflate`, `z`, `bz2`, and `lzma` are still required by project link flags / HTSlib linkage. 
 
 
 ### Versions
