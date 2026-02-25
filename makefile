@@ -11,7 +11,7 @@ PROJECT_BINS = \
 	phase/bin/GLIMPSE2_phase \
 	split_reference/bin/GLIMPSE2_split_reference
 
-.PHONY: all deps boost-deps htslib-deps collect-binaries $(projects)
+.PHONY: all deps boost-deps htslib-deps collect-binaries clean $(projects)
 
 all: deps $(projects) collect-binaries
 
@@ -42,3 +42,8 @@ clean:
 	for dir in $(projects); do \
 	$(MAKE) $@ -C $$dir; \
 	done
+	-cd $(BOOST_DIR) && ./b2 --clean-all
+	-rm -rf $(BOOST_DIR)/stage $(BOOST_DIR)/bin.v2
+	-rm -f $(BOOST_DEPS_STAMP)
+	-$(MAKE) -C $(HTSLIB_DIR) clean
+	-rm -f $(TOP_BIN_DIR)/GLIMPSE2_*
