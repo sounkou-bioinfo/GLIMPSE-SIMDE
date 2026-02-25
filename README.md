@@ -52,6 +52,8 @@ At the moment, GLIMPSE2 performs imputation only from a reference panel of sampl
 To build the source code, please refer to the [step-by-step guide on the website](https://odelaneau.github.io/GLIMPSE/docs/installation) for the upstream version or
 
 ```bash
+git clone --recursive https://github.com/sounkou-bioinfo/GLIMPSE-SIMDE
+cd GLIMPSE-SIMDE
 make -f makefile
 ```
 
