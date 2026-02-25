@@ -22,14 +22,14 @@ boost-deps: $(BOOST_DEPS_STAMP)
 $(BOOST_DEPS_STAMP):
 	cd $(BOOST_DIR) && \
 	./bootstrap.sh --with-libraries=iostreams,program_options,serialization && \
-	./b2 --with-iostreams --with-program_options --with-serialization stage && \
+	./b2 --with-iostreams --with-program_options --with-serialization cxxflags='-Wno-uninitialized' stage && \
 	touch stage/lib/.glimpse_boost_stage.stamp
 
 htslib-deps: $(HTSLIB_STATIC_LIB)
 
 $(HTSLIB_STATIC_LIB):
 	cd $(HTSLIB_DIR) && \
-	$(MAKE) lib-static
+	$(MAKE) lib-static CFLAGS='-g -Wall -O2 -fvisibility=hidden -Wno-deprecated-declarations'
 
 $(projects):
 	$(MAKE) -C $@ $(COMPILATION_ENV)
