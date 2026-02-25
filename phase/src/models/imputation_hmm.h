@@ -28,7 +28,11 @@
 
 #include <utils/otools.h>
 #include <containers/conditioning_set.h>
-#include <immintrin.h>
+#ifndef SIMDE_ENABLE_NATIVE_ALIASES
+#define SIMDE_ENABLE_NATIVE_ALIASES
+#endif
+#include <simde/x86/avx2.h>
+#include <simde/x86/fma.h>
 #include <boost/align/aligned_allocator.hpp>
 
 template <typename T>
