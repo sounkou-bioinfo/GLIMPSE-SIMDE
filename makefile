@@ -3,10 +3,17 @@ BOOST_DIR = boost_1_78_0
 HTSLIB_DIR = htslib-1.16
 HTSLIB_STATIC_LIB = $(HTSLIB_DIR)/libhts.a
 BOOST_DEPS_STAMP = $(BOOST_DIR)/stage/lib/.glimpse_boost_stage.stamp
+TOP_BIN_DIR = bin
+PROJECT_BINS = \
+	chunk/bin/GLIMPSE2_chunk \
+	concordance/bin/GLIMPSE2_concordance \
+	ligate/bin/GLIMPSE2_ligate \
+	phase/bin/GLIMPSE2_phase \
+	split_reference/bin/GLIMPSE2_split_reference
 
-.PHONY: all deps boost-deps htslib-deps $(projects)
+.PHONY: all deps boost-deps htslib-deps collect-binaries $(projects)
 
-all: deps $(projects)
+all: deps $(projects) collect-binaries
 
 deps: boost-deps htslib-deps
 
@@ -26,6 +33,10 @@ $(HTSLIB_STATIC_LIB):
 
 $(projects):
 	$(MAKE) -C $@ $(COMPILATION_ENV)
+
+collect-binaries: $(PROJECT_BINS)
+	mkdir -p $(TOP_BIN_DIR)
+	cp -f $(PROJECT_BINS) $(TOP_BIN_DIR)/
 
 clean:
 	for dir in $(projects); do \
