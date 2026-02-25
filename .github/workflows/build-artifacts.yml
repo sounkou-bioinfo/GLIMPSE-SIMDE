@@ -18,6 +18,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
 
       - name: Install dependencies (Linux)
         if: runner.os == 'Linux'
@@ -37,7 +40,7 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           brew update
-          brew install autoconf bzip2 curl libdeflate openssl@3 xz zlib
+          brew install autoconf bzip2 curl libdeflate openssl@3 xz zlib 
           echo "HOMEBREW_PREFIX=$(brew --prefix)" >> "$GITHUB_ENV"
 
       - name: Configure macOS include/lib paths
@@ -47,9 +50,15 @@ jobs:
           echo "LIBRARY_PATH=${HOMEBREW_PREFIX}/lib:${LIBRARY_PATH}" >> "$GITHUB_ENV"
           echo "PKG_CONFIG_PATH=${HOMEBREW_PREFIX}/lib/pkgconfig:${PKG_CONFIG_PATH}" >> "$GITHUB_ENV"
 
-      - name: Build
+      - name: Build (Linux)
+        if: runner.os == 'Linux'
         run: |
           make -f makefile
+
+      - name: Build (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          make -f makefile CXX='clang++ -Wno-deprecated-builtins -Wno-error=deprecated-builtins'
 
       - name: Upload binaries
         uses: actions/upload-artifact@v4

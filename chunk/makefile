@@ -1,5 +1,7 @@
 #COMPILER MODE C++11
-CXX=g++ -std=c++17
+CXXSTD?=c++17
+CXX?=g++
+CXX:=$(CXX) -std=$(CXXSTD)
 
 
 #create folders
